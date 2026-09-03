@@ -349,8 +349,8 @@ export default function AgentChatInterface({ addLog }: ChatProps) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '2rem' }}>
-      <div style={{ paddingBottom: '1.5rem', borderBottom: 'var(--border-heavy)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="chat-container">
+      <div className="chat-header">
         <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0, textTransform: 'uppercase' }}>
           PRAVAH_PAY
         </h2>
@@ -428,19 +428,19 @@ export default function AgentChatInterface({ addLog }: ChatProps) {
           </div>
         )}
 
-        <div style={{ paddingTop: '1rem', position: 'relative', display: 'flex', gap: '8px' }}>
-          <div style={{ position: 'relative', flex: 1 }}>
+        <div className="chat-input-wrapper">
+          <div className="chat-input-inner">
             <input 
               type="text" 
-              className="brutal-input" 
+              className="brutal-input chat-input-field" 
               placeholder={!isInitialized ? "Loading session..." : isLoading ? "PROCESSING..." : isListening ? "LISTENING... (Speak now)" : "ENTER_COMMAND..."}
-              style={{ width: '100%', paddingRight: '140px', background: isListening ? '#ffeaf5' : 'var(--white)' }}
+              style={{ background: isListening ? '#ffeaf5' : 'var(--white)' }}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               disabled={isLoading || !isInitialized}
             />
-            <div style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: '8px' }}>
+            <div className="chat-input-buttons">
               <button
                 type="button"
                 onClick={() => {
@@ -497,7 +497,7 @@ export default function AgentChatInterface({ addLog }: ChatProps) {
             </div>
           </div>
           <button 
-            className="btn btn-secondary" 
+            className="btn btn-secondary clear-chat-btn" 
             title="Clear Chat History"
             onClick={() => {
               if (window.confirm('Clear chat history?')) {

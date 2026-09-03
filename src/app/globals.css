@@ -224,11 +224,25 @@ code, pre, .font-mono {
 .payment-modal-close { border: var(--border-medium); background: var(--white); color: var(--black); font-size: 1.4rem; line-height: 1; width: 34px; height: 34px; cursor: pointer; }.payment-frame { flex: 1; width: 100%; border: 0; background: #f6f6f6; }.payment-modal-footer { padding: 10px 14px; color: var(--text-muted); font: 700 .58rem 'JetBrains Mono', monospace; text-align: center; border-top: var(--border-medium); }
 .chat-section .brutal-card { min-width: 0 !important; }
 .chat-section .brutal-card h4 { overflow-wrap: anywhere; }
+.chat-container { display: flex; flex-direction: column; height: 100%; padding: 2rem; }
+.chat-header { padding-bottom: 1.5rem; border-bottom: var(--border-heavy); display: flex; justify-content: space-between; align-items: center; }
+.chat-input-wrapper { padding-top: 1rem; position: relative; display: flex; gap: 8px; }
+.chat-input-inner { position: relative; flex: 1; }
+.chat-input-field { width: 100%; padding-right: 140px; }
+.chat-input-buttons { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px; }
+.workspace-header { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 16px; background: var(--bg-base); }
+
 @media (max-width: 760px) {
   .app-layout { height: auto; min-height: 100vh; overflow: visible; flex-direction: column; padding: 12px; }
   .chat-section { min-height: 78vh; }
   .workspace-section { min-height: 40vh; }
   .payment-modal-backdrop { padding: 10px; }.payment-modal { height: 94vh; box-shadow: 5px 5px 0 var(--neon-pink); }
+  .chat-container { padding: 1rem; }
+  .chat-header { flex-direction: column; align-items: flex-start; gap: 10px; padding-bottom: 1rem; }
+  .chat-input-wrapper { flex-direction: column; }
+  .chat-input-field { padding-right: 120px; }
+  .clear-chat-btn { width: 100%; padding: 12px !important; }
+  .workspace-header { padding: 16px; }
 }
 /* Login */
 .login-shell { min-height: 100vh; padding: 32px 5vw 48px; background: #f3f1eb; color: #111; position: relative; display: flex; align-items: center; }

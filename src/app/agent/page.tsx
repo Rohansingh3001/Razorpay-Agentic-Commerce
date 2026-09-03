@@ -23,7 +23,7 @@ export default function AgentDashboard() {
 
       {/* Side: Audit Terminal */}
       <section className="workspace-section" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ flex: 1, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--bg-base)' }}>
+        <div className="workspace-header">
           <h3 style={{ fontSize: '1.2rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
             System Integrity
           </h3>
