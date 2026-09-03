@@ -47,8 +47,8 @@ export default function LandingPage() {
   return (
     <div className="landing-shell">
       <header className="site-header">
-        <Link href="/" className="brand" aria-label="Agentic Commerce home">
-          <span>Agentic</span><strong>Commerce</strong>
+        <Link href="/" className="brand" aria-label="Pravah Pay home">
+          <span>Pravah</span><strong>Pay</strong>
         </Link>
         <div className="header-actions">
           <span className="header-status"><i /> Test mode</span>
@@ -122,7 +122,7 @@ export default function LandingPage() {
           <div className="section-heading" style={{ borderBottom: '2px solid #333', paddingBottom: '30px', marginBottom: '40px' }}>
             <div>
               <span className="section-kicker" style={{ color: '#56d7d3' }}>Coming Soon</span>
-              <h2 style={{ color: '#f3f1eb' }}>Phase 2: The Future of<br /><em style={{ color: '#eb3b85' }}>Agentic Commerce</em></h2>
+              <h2 style={{ color: '#f3f1eb' }}>Phase 2: The Future of<br /><em style={{ color: '#eb3b85' }}>Pravah Pay</em></h2>
             </div>
             <p style={{ color: '#aaa' }}>A sneak peek at the next evolution of our infrastructure, featuring multi-agent swarms, voice AI, and predictive negotiation.</p>
           </div>
@@ -152,7 +152,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="site-footer"><span>AGENTIC COMMERCE / PLATFORM PREVIEW</span><span>© {new Date().getFullYear()} <b>RAZORPAY</b></span></footer>
+      <footer className="site-footer"><span>PRAVAH PAY / PLATFORM PREVIEW</span><span>© {new Date().getFullYear()} <b>RAZORPAY</b></span></footer>
       
       {activeMockup && (
         <div className="payment-modal-backdrop" onClick={() => setActiveMockup(null)} style={{ zIndex: 9999 }}>

@@ -8,7 +8,7 @@ export default function LoginPage() {
       <Link href="/" className="login-back btn btn-secondary">[←] BACK_TO_HOME</Link>
       <div className="login-layout">
         <section className="login-context">
-          <span className="section-kicker">Agentic Commerce / Access</span>
+          <span className="section-kicker">Pravah Pay / Access</span>
           <h1>Commerce,<br /><em>in motion.</em></h1>
           <p>Sign in to your secure workspace and turn a buyer&apos;s intent into a governed transaction.</p>
           <div className="login-context-meta"><span><i /> TEST MODE ACTIVE</span><span>BUILD 2.4.0</span></div>

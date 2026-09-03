@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agentic Commerce | Build for AI buyers",
+  title: "Pravah Pay | Build for AI buyers",
   description: "Build, test, and govern commerce agents on Razorpay test-mode APIs.",
 };
 

@@ -28,7 +28,7 @@ export default function AgentDashboard() {
             System Integrity
           </h3>
           <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-             Agentic Commerce enabled. All product browsing and transactions are now fully supported natively within the secure chat feed.
+             Pravah Pay enabled. All product browsing and transactions are now fully supported natively within the secure chat feed.
           </p>
         </div>
         

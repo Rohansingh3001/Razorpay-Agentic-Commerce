@@ -352,7 +352,7 @@ export default function AgentChatInterface({ addLog }: ChatProps) {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '2rem' }}>
       <div style={{ paddingBottom: '1.5rem', borderBottom: 'var(--border-heavy)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0, textTransform: 'uppercase' }}>
-          AGENTIC_COMMERCE
+          PRAVAH_PAY
         </h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--black)', color: 'var(--neon-yellow)', padding: '4px 12px', fontFamily: 'JetBrains Mono', fontSize: '0.8rem', fontWeight: 'bold' }}>
           <div style={{ width: 8, height: 8, background: 'var(--neon-green)', borderRadius: '0' }} />
