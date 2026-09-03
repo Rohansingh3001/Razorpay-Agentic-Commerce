@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+asyncpg
+groq
+pydantic
+pydantic-settings
+python-dotenv
+razorpay
