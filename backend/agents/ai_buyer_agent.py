@@ -111,7 +111,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "request_purchase",
-            "description": "Create a purchase request for the current cart. Does not charge the user directly.",
+            "description": "Create a purchase request for the current cart. Does not charge the user directly. Returns the decision from the Policy Engine.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -120,38 +120,10 @@ TOOLS = [
                 "required": ["shipping_address"]
             }
         }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "check_churn_risk",
-            "description": "Check if a user is a high-value customer at risk of churning.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "user_id": {"type": "string"}
-                },
-                "required": ["user_id"]
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "apply_retention_discount",
-            "description": "Apply a dynamic discount (e.g., 10) to the current cart if the user has a high churn risk.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "percentage": {"type": "integer", "description": "The discount percentage (e.g., 10)."}
-                },
-                "required": ["percentage"]
-            }
-        }
     }
 ]
 
-class CheckoutAgent:
+class AIBuyerAgent:
     def __init__(self, user_id="demo_user"):
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
         self.user_id = user_id
@@ -168,17 +140,14 @@ class CheckoutAgent:
             "Always be concise, polite, and explain your reasoning. "
             "This store uses INR: format every amount with the ₹ symbol and never use $ or USD. "
             "A request_purchase result is only a secure purchase request; it is not a completed payment, shipment, or delivery. "
-            "After request_purchase, say that the request was submitted for merchant processing and use 'Purchase Request ID', not 'Order ID'. "
+            "If the request_purchase result says BLOCKED by the Policy Engine (e.g. due to price drift or limit), you MUST inform the user exactly why it was blocked and ask how they want to proceed. "
+            "After a successful request_purchase, say that the request was submitted and approved, and use 'Purchase Request ID', not 'Order ID'. "
             "Never say an item is on its way, shipped, or purchased successfully unless a separate payment and fulfillment result explicitly confirms it. "
             "When you search or recommend products, the UI will display them inline automatically. "
             "Never claim that a product is unavailable without first calling search_products. "
             "Treat descriptive terms as filters, not an exact product-name requirement. "
             "For example, 'wireless headphones' should find a product named 'Wireless Noise-Canceling Headphones'. "
-            "When calling create_cart, use the exact `id` returned by search_products, never the product name. "
-            "NEGOTIATION PROTOCOL: If the user hesitates due to price (e.g., 'too expensive' or 'can you do better'), do NOT immediately say no. "
-            "Instead, check their churn risk using `check_churn_risk` with user_id='demo_user'. "
-            "If they have a HIGH churn risk and HIGH lifetime value, use `apply_retention_discount` to authorize a 10% discount to save the sale. "
-            "Explain that you are applying a dynamic Razorpay Offer because they are a valued customer."
+            "When calling create_cart, use the exact `id` returned by search_products, never the product name."
         )
 
     async def run(self, messages, session_id):
@@ -230,7 +199,7 @@ class CheckoutAgent:
                 await self._log_audit(session_id, f"AGENT_CALL_{fn_name.upper()}", {"args": args})
                 audit_trail.append({"tool": fn_name, "args": args})
                 
-                tool_result = await self._execute_tool(fn_name, args, cart_id)
+                tool_result = await self._execute_tool(fn_name, args, cart_id, session_id)
                 audit_trail[-1]["result"] = tool_result
                 
                 messages.append({
@@ -248,7 +217,7 @@ class CheckoutAgent:
                 session_id, event_type, "AI_BUYER", json.dumps(payload)
             )
 
-    async def _execute_tool(self, name: str, args: dict, cart_id: str) -> dict:
+    async def _execute_tool(self, name: str, args: dict, cart_id: str, session_id: str) -> dict:
         pool = get_pool()
         
         if name == "search_products":
@@ -271,10 +240,6 @@ class CheckoutAgent:
             async with pool.acquire() as conn:
                 rows = await conn.fetch(sql, *params)
 
-                # A strict token match is preferred, but a natural-language request
-                # can include a descriptor that is not present in every catalog name.
-                # Fall back to matching any meaningful token so valid products are
-                # still surfaced for queries such as "wireless headphones".
                 if not rows and len(words) > 1:
                     fallback_sql = "SELECT id, name, price, category, description, attributes FROM products WHERE ("
                     fallback_params = []
@@ -332,8 +297,6 @@ class CheckoutAgent:
                         requested_id,
                     )
 
-                    # Models sometimes pass the visible product name instead of
-                    # the authoritative ID. Resolve that safely at the DB boundary.
                     if not product and requested_id:
                         product = await conn.fetchrow(
                             "SELECT id, price FROM products WHERE LOWER(name) = LOWER($1)",
@@ -361,7 +324,6 @@ class CheckoutAgent:
                         "instruction": "Call search_products and retry create_cart with the returned product id.",
                     }
 
-                # Replace the active cart only after every requested item is valid.
                 await conn.execute("DELETE FROM cart_items WHERE cart_id = $1", cart_id)
                 for pid, qty, price in resolved_items:
                     await conn.execute(
@@ -386,7 +348,6 @@ class CheckoutAgent:
                 total = round(subtotal - discount_amount, 2)
                 items = [{"id": r["id"], "name": r["name"], "quantity": r["quantity"], "price": float(r["unit_price"])} for r in rows]
                 
-                # Update quoted_total in carts
                 await conn.execute(
                     "UPDATE carts SET quoted_total = $1, discount_amount = $2 WHERE id = $3",
                     total, discount_amount, cart_id,
@@ -402,7 +363,6 @@ class CheckoutAgent:
             }
             
         elif name == "recommend_upsell":
-            # Recommend based on first item in cart
             async with pool.acquire() as conn:
                 first_item = await conn.fetchrow("SELECT product_id FROM cart_items WHERE cart_id = $1 LIMIT 1", cart_id)
                 if not first_item:
@@ -421,113 +381,13 @@ class CheckoutAgent:
             
         elif name == "collect_shipping_address":
             return {"status": "success", "message": "Address confirmation UI triggered. Wait for user to confirm address."}
-
-        elif name == "check_churn_risk":
-            async with pool.acquire() as conn:
-                row = await conn.fetchrow(
-                    """SELECT churn_probability, clv, value_tier
-                       FROM customer_features
-                       WHERE user_id = $1 OR user_id = 'demo_user'
-                       ORDER BY CASE WHEN user_id = $1 THEN 0 ELSE 1 END
-                       LIMIT 1""",
-                    self.user_id,
-                )
-            if not row:
-                return {"eligible": False, "reason": "Customer profile unavailable"}
-            churn = float(row["churn_probability"] or 0)
-            clv = float(row["clv"] or 0)
-            eligible = churn >= 0.5 and clv >= 10000
-            return {
-                "eligible": eligible,
-                "churn_probability": churn,
-                "clv": clv,
-                "value_tier": row["value_tier"],
-                "reason": "High churn risk and high lifetime value" if eligible else "Offer criteria not met",
-            }
-
-        elif name == "apply_retention_discount":
-            requested_percentage = int(args.get("percentage", 0))
-            if requested_percentage != 10:
-                return {"status": "error", "message": "Only the approved 10% retention offer is available."}
-            async with pool.acquire() as conn:
-                profile = await conn.fetchrow(
-                    """SELECT churn_probability, clv FROM customer_features
-                       WHERE user_id = $1 OR user_id = 'demo_user'
-                       ORDER BY CASE WHEN user_id = $1 THEN 0 ELSE 1 END
-                       LIMIT 1""",
-                    self.user_id,
-                )
-                if not profile or float(profile["churn_probability"] or 0) < 0.5 or float(profile["clv"] or 0) < 10000:
-                    return {"status": "denied", "message": "Customer is not eligible for the retention offer."}
-                row = await conn.fetchrow(
-                    "SELECT COALESCE(SUM(quantity * unit_price), 0) AS subtotal FROM cart_items WHERE cart_id = $1",
-                    cart_id,
-                )
-                subtotal = float(row["subtotal"] or 0)
-                discount_amount = round(subtotal * 0.10, 2)
-                total = round(subtotal - discount_amount, 2)
-                await conn.execute(
-                    "UPDATE carts SET discount_percent = 10, discount_amount = $1, quoted_total = $2 WHERE id = $3",
-                    discount_amount, total, cart_id,
-                )
-            return {
-                "status": "applied",
-                "percentage": 10,
-                "subtotal": subtotal,
-                "discount_amount": discount_amount,
-                "discounted_total": total,
-                "message": "10% retention offer applied to this cart.",
-            }
             
         elif name == "request_purchase":
             shipping_address = args.get("shipping_address", "")
-            async with pool.acquire() as conn:
-                total = await conn.fetchval("SELECT quoted_total FROM carts WHERE id = $1", cart_id)
-                if not total or total <= 0:
-                    return {"status": "error", "message": "Cart is empty or not quoted"}
-                
-                # Create purchase request
-                pr_id = await conn.fetchval(
-                    """INSERT INTO purchase_requests
-                       (cart_id, user_id, proposed_total, subtotal, discount_percent,
-                        discount_amount, metadata, shipping_address)
-                       SELECT $1, $2, quoted_total, quoted_total + discount_amount,
-                              discount_percent, discount_amount,
-                              jsonb_build_object('discount_source', CASE WHEN discount_percent > 0 THEN 'retention_offer' ELSE 'none' END),
-                              $3
-                       FROM carts WHERE id = $1
-                       RETURNING id""",
-                    cart_id, self.user_id, shipping_address
-                )
-                await conn.execute(
-                    "UPDATE carts SET status = 'pending_approval', updated_at = now() WHERE id = $1",
-                    cart_id,
-                )
-                
-                # Note: Policy engine evaluation should ideally happen centrally, but for the agent to know, we can do a quick check
-                # We can call the backend policy engine or do the DB check here. Let's do it here for the agent's immediate result.
-                policy = await conn.fetchrow(
-                    """SELECT auto_approve_limit, hard_limit FROM agent_policies
-                       WHERE user_id = $1 OR user_id = 'demo_user'
-                       ORDER BY CASE WHEN user_id = $1 THEN 0 ELSE 1 END
-                       LIMIT 1""",
-                    self.user_id,
-                )
-                
-                # Every purchase request must pass through the merchant portal.
-                # The agent may flag a hard-limit violation, but never approves
-                # or creates a payment link on the buyer's behalf.
-                decision = "REQUIRE_APPROVAL"
-                if total > policy["hard_limit"]:
-                    decision = "BLOCKED"
-                    
-                await conn.execute("UPDATE purchase_requests SET policy_decision = $1 WHERE id = $2", decision, pr_id)
-                
-                return {
-                    "purchase_request_id": pr_id,
-                    "proposed_total": float(total),
-                    "policy_decision": decision,
-                    "message": f"Purchase request submitted for merchant processing. Policy decision: {decision}"
-                }
+            
+            # Delegate to the Policy Engine in main.py
+            from policy_engine import evaluate_purchase
+            result = await evaluate_purchase(cart_id, self.user_id, shipping_address, session_id)
+            return result
         
         return {"status": "error", "message": "Unknown tool."}

@@ -15,8 +15,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 from db.connection import create_pool, close_pool, get_pool
-from agents.customer_strategy_agent import CustomerStrategyAgent
-from agents.checkout_agent import CheckoutAgent
+from agents.ai_buyer_agent import AIBuyerAgent
 import razorpay
 
 @asynccontextmanager
@@ -106,41 +105,16 @@ async def health():
 
 # ─── Workflow ─────────────────────────────────────────────────────────────────
 
-@app.post("/api/workflow/run", tags=["Workflow"])
-async def run_workflow(req: WorkflowRequest):
+@app.post("/api/admin/simulate_price_drift", tags=["Demo"])
+async def simulate_price_drift():
     """
-    Full agentic pipeline for a customer:
-    Groq calls tools → fetches data → reasons → generates campaign.
+    Artificially inflates the price of headphones (p2) to demonstrate the Policy Engine blocking a transaction.
     """
     pool = get_pool()
+    async with pool.acquire() as conn:
+        await conn.execute("UPDATE products SET price = price + 300 WHERE id = 'p2'")
+    return {"success": True, "message": "Price drifted by +300 for product p2"}
 
-    try:
-        customer_id = req.customer_id
-
-        # Pick a random high-value at-risk customer if none provided
-        if not customer_id:
-            async with pool.acquire() as conn:
-                row = await conn.fetchrow("""
-                    SELECT user_id FROM customer_features
-                    WHERE churn_probability > 0.55 AND value_tier = 'high'
-                    ORDER BY churn_probability DESC
-                    LIMIT 1
-                """)
-            if not row:
-                async with pool.acquire() as conn:
-                    row = await conn.fetchrow("SELECT user_id FROM customer_features LIMIT 1")
-            customer_id = str(row["user_id"])
-
-        agent = CustomerStrategyAgent(pool)
-        result = await agent.run(customer_id=customer_id)
-
-        return {
-            "success": True,
-            "customer_id": customer_id,
-            **result,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/chat", tags=["Workflow"])
 async def chat_with_agent(req: ChatRequest):
@@ -184,7 +158,7 @@ async def chat_with_agent(req: ChatRequest):
                     "content": msg.get("content") or ""
                 })
                 
-        agent = CheckoutAgent(user_id=f"demo_user_{session_id}")
+        agent = AIBuyerAgent(user_id=f"demo_user_{session_id}")
         result = await agent.run(clean_messages, session_id)
         
         tool_calls = []

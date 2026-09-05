@@ -6,23 +6,23 @@ import Link from 'next/link';
 const features = [
   {
     number: '01',
-    label: 'Conversational checkout',
-    title: 'Sell in the flow',
-    description: 'Let shoppers discover, decide, and pay without leaving the conversation.',
+    label: 'AI-readable catalog',
+    title: 'Structured Commerce',
+    description: 'Expose your products, prices, inventory, and compatibility directly to AI buyers.',
     className: 'feature-cyan',
   },
   {
     number: '02',
-    label: 'Agent catalog',
-    title: 'Your catalog, everywhere',
-    description: 'Give AI buyers a structured, trusted view of your inventory and offers.',
+    label: 'Agentic cart',
+    title: 'Contextual Upsells',
+    description: 'The AI doesn’t just recommend products; it logically builds the cart and identifies relevant add-ons.',
     className: 'feature-pink',
   },
   {
     number: '03',
-    label: 'Audit trail',
-    title: 'Control every action',
-    description: 'Keep every recommendation, tool call, and transaction visible and bounded.',
+    label: 'Trust & Safety',
+    title: 'Policy Engine',
+    description: 'The AI can reason and propose. But the backend independently verifies the actual price, inventory, and authorization limits.',
     className: 'feature-yellow',
   },
   {
@@ -34,9 +34,9 @@ const features = [
   },
   {
     number: '05',
-    label: 'Predictive ML',
-    title: 'Negotiation Agent',
-    description: 'Dynamically drop prices for high-churn-risk users to save abandoned carts using Razorpay Offers.',
+    label: 'Audit trail',
+    title: 'Observable Decisions',
+    description: 'Keep every recommendation, tool call, and transaction visible and bounded for the user.',
     className: 'feature-pink',
   },
 ];
@@ -47,8 +47,8 @@ export default function LandingPage() {
   return (
     <div className="landing-shell">
       <header className="site-header">
-        <Link href="/" className="brand" aria-label="Pravah Pay home">
-          <span>Pravah</span><strong>Pay</strong>
+        <Link href="/" className="brand" aria-label="RazorBuy home">
+          <span>Razor</span><strong>Buy</strong>
         </Link>
         <div className="header-actions">
           <span className="header-status"><i /> Test mode</span>
@@ -61,20 +61,20 @@ export default function LandingPage() {
         <section className="hero-section">
           <div className="hero-copy animate-snap">
             <div className="eyebrow"><span className="eyebrow-dot" /> Commerce infrastructure for AI buyers</div>
-            <h1>Make your store <span className="text-highlight">AI-ready.</span></h1>
+            <h1>Make your store <span className="text-highlight">AI-buyable.</span></h1>
             <p className="hero-description">
-              Build, test, and govern agents that turn intent into revenue on Razorpay&apos;s test-mode APIs.
+              Build, test, and govern agentic commerce layers that make merchants readable, discoverable, and transactable by AI buyers.
             </p>
             <div className="hero-actions">
               <Link href="/login" className="btn btn-primary btn-large">Start building <span aria-hidden="true">→</span></Link>
               <a href="#features" className="text-link">Explore the system <span aria-hidden="true">↓</span></a>
             </div>
             <div className="hero-proof">
-              <span><b>01</b> Catalog-aware agents</span>
-              <span><b>02</b> Guardrailed payments</span>
-              <span><b>03</b> Observable by default</span>
+              <span><b>01</b> AI-readable catalog</span>
+              <span><b>02</b> Agentic cart</span>
+              <span><b>03</b> Policy Engine</span>
               <span><b>04</b> Voice checkout</span>
-              <span><b>05</b> Predictive negotiation</span>
+              <span><b>05</b> Explainable audit trail</span>
             </div>
           </div>
 
@@ -85,17 +85,17 @@ export default function LandingPage() {
               <span className="console-live"><i /> LIVE</span>
             </div>
             <div className="console-body">
-              <div className="console-label">Revenue agent <span>v2.4</span></div>
-              <div className="console-command">Find the best offer for a returning customer<span className="cursor" /></div>
+              <div className="console-label">AI Buyer Agent <span>v2.4</span></div>
+              <div className="console-command">I need headphones for work calls under ₹4,000<span className="cursor" /></div>
               <div className="console-divider" />
               <div className="console-result">
                 <div className="result-icon">↗</div>
-                <div><strong>Intent resolved</strong><small>Cart optimized · 3 actions approved</small></div>
+                <div><strong>Purchase Proposed</strong><small>Cart built · Policy verified</small></div>
                 <span className="result-check">✓</span>
               </div>
               <div className="console-metrics">
-                <div><small>CONVERSION LIFT</small><strong>+18.4%</strong></div>
-                <div><small>RISK STATUS</small><strong className="green-text">LOW</strong></div>
+                <div><small>UPSELL ACCEPTED</small><strong>+₹299</strong></div>
+                <div><small>POLICY STATUS</small><strong className="green-text">APPROVED</strong></div>
               </div>
             </div>
             <div className="console-footer"><span>SECURE SESSION</span><span>RAZORPAY TEST MODE</span></div>
@@ -122,9 +122,9 @@ export default function LandingPage() {
           <div className="section-heading" style={{ borderBottom: '2px solid #333', paddingBottom: '30px', marginBottom: '40px' }}>
             <div>
               <span className="section-kicker" style={{ color: '#56d7d3' }}>Coming Soon</span>
-              <h2 style={{ color: '#f3f1eb' }}>Phase 2: The Future of<br /><em style={{ color: '#eb3b85' }}>Pravah Pay</em></h2>
+              <h2 style={{ color: '#f3f1eb' }}>Phase 2: The Future of<br /><em style={{ color: '#eb3b85' }}>RazorBuy</em></h2>
             </div>
-            <p style={{ color: '#aaa' }}>A sneak peek at the next evolution of our infrastructure, featuring multi-agent swarms, voice AI, and predictive negotiation.</p>
+            <p style={{ color: '#aaa' }}>A sneak peek at the next evolution of our infrastructure, featuring multi-agent swarms, voice AI, and strict policy gating.</p>
           </div>
           <div className="feature-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))' }}>
             
@@ -133,26 +133,26 @@ export default function LandingPage() {
               <div className="feature-content">
                 <span className="feature-label" style={{ color: '#56d7d3' }}>Omnichannel</span>
                 <h3 style={{ color: '#fff' }}>WhatsApp Checkout</h3>
-                <p style={{ color: '#aaa' }}>Let the AI buyer negotiate and build carts directly in WhatsApp, dropping a secure Razorpay link right in the chat.</p>
+                <p style={{ color: '#aaa' }}>Let the AI buyer build carts directly in WhatsApp, dropping a secure Razorpay link right in the chat.</p>
               </div>
               <span className="feature-arrow" aria-hidden="true" style={{ color: '#56d7d3' }}>💬</span>
             </article>
 
-            <article className="feature-card" onClick={() => setActiveMockup('roi')} style={{ backgroundColor: '#1a1a1a', borderColor: '#333', boxShadow: '6px 6px 0 #8de3b8', cursor: 'pointer' }}>
-              <div className="feature-number" style={{ borderColor: '#333', color: '#8de3b8' }}>02</div>
+            <article className="feature-card" onClick={() => setActiveMockup('policy')} style={{ backgroundColor: '#1a1a1a', borderColor: '#333', boxShadow: '6px 6px 0 #eb3b85', cursor: 'pointer' }}>
+              <div className="feature-number" style={{ borderColor: '#333', color: '#eb3b85' }}>02</div>
               <div className="feature-content">
-                <span className="feature-label" style={{ color: '#8de3b8' }}>Analytics</span>
-                <h3 style={{ color: '#fff' }}>Agent ROI Dashboard</h3>
-                <p style={{ color: '#aaa' }}>Track AI-generated revenue, average upsell metrics, and policy rejections in real-time.</p>
+                <span className="feature-label" style={{ color: '#eb3b85' }}>Safe Autonomy</span>
+                <h3 style={{ color: '#fff' }}>Policy Engine Block</h3>
+                <p style={{ color: '#aaa' }}>See how RazorBuy independently blocks transactions if prices drift or authorization limits are exceeded.</p>
               </div>
-              <span className="feature-arrow" aria-hidden="true" style={{ color: '#8de3b8' }}>📊</span>
+              <span className="feature-arrow" aria-hidden="true" style={{ color: '#eb3b85' }}>🛡️</span>
             </article>
 
           </div>
         </section>
       </main>
 
-      <footer className="site-footer"><span>PRAVAH PAY / PLATFORM PREVIEW</span><span>© {new Date().getFullYear()} <b>RAZORPAY</b></span></footer>
+      <footer className="site-footer"><span>RAZORBUY / PLATFORM PREVIEW</span><span>© {new Date().getFullYear()} <b>RAZORPAY</b></span></footer>
       
       {activeMockup && (
         <div className="payment-modal-backdrop" onClick={() => setActiveMockup(null)} style={{ zIndex: 9999 }}>
@@ -176,60 +176,20 @@ export default function LandingPage() {
                 </div>
               )}
 
-              {activeMockup === 'voice' && (
-                <div style={{ textAlign: 'center', width: '100%', maxWidth: '500px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', height: '100px', marginBottom: '30px' }}>
-                    {[1, 2, 3, 4, 5, 6, 7].map(i => (
-                      <div key={i} style={{ width: '8px', height: `${Math.max(20, Math.random() * 80)}px`, background: 'var(--neon-pink)', borderRadius: '10px', animation: 'blink 1s infinite alternate', animationDelay: `${i * 0.1}s` }} />
-                    ))}
-                  </div>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', fontStyle: 'italic', fontWeight: 'normal', color: '#aaa' }}>&quot;Add the carrying case to my cart and check out...&quot;</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--neon-cyan)' }}>
-                    <div><span style={{ color: '#fff' }}>[SYS]</span> Audio intent parsed.</div>
-                    <div><span style={{ color: '#fff' }}>[SYS]</span> Inventory locked.</div>
-                    <div style={{ background: '#111', border: '1px solid var(--neon-cyan)', padding: '10px 20px', marginTop: '10px', color: '#fff' }}>Razorpay link generated in 1.2s.</div>
-                  </div>
-                </div>
-              )}
-
-              {activeMockup === 'negotiation' && (
+              {activeMockup === 'policy' && (
                 <div style={{ display: 'flex', width: '100%', gap: '20px', alignItems: 'stretch' }}>
                   <div style={{ flex: 1, background: '#1a1a1a', border: '1px solid #333', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <div style={{ color: '#ffdf38', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>ML Customer Profile</div>
-                    <div><small style={{ color: '#888' }}>CHURN RISK</small><strong style={{ display: 'block', color: 'var(--neon-pink)', fontSize: '1.2rem' }}>HIGH (82%)</strong></div>
-                    <div><small style={{ color: '#888' }}>LIFETIME VALUE</small><strong style={{ display: 'block', color: '#fff', fontSize: '1.2rem' }}>₹12,450</strong></div>
-                    <div style={{ marginTop: 'auto', padding: '10px', background: 'rgba(255,0,255,0.1)', borderLeft: '2px solid var(--neon-pink)', fontSize: '0.7rem', color: 'var(--neon-pink)', fontFamily: 'JetBrains Mono' }}>AUTHORIZING 10% DYNAMIC DISCOUNT</div>
+                    <div style={{ color: '#ffdf38', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>Transaction Intercepted</div>
+                    <div><small style={{ color: '#888' }}>AGENT QUOTE</small><strong style={{ display: 'block', color: '#fff', fontSize: '1.2rem' }}>₹3,499</strong></div>
+                    <div><small style={{ color: '#888' }}>LIVE MERCHANT PRICE</small><strong style={{ display: 'block', color: 'var(--neon-pink)', fontSize: '1.2rem' }}>₹3,799</strong></div>
+                    <div style={{ marginTop: 'auto', padding: '10px', background: 'rgba(255,0,255,0.1)', borderLeft: '2px solid var(--neon-pink)', fontSize: '0.7rem', color: 'var(--neon-pink)', fontFamily: 'JetBrains Mono' }}>POLICY DECISION: BLOCKED</div>
                   </div>
                   <div style={{ flex: 1.5, background: '#1a1a1a', border: '1px solid #333', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <div className="chat-bubble-user" style={{ padding: '12px', alignSelf: 'flex-end', fontSize: '0.85rem' }}>Hmm, ₹3499 is a bit steep for me right now.</div>
-                    <div className="chat-bubble-agent" style={{ padding: '12px', alignSelf: 'flex-start', fontSize: '0.85rem' }}>Wait! Because you&apos;re a loyal customer, I&apos;ve just applied a 10% discount using Razorpay Offers.</div>
+                    <div className="chat-bubble-user" style={{ padding: '12px', alignSelf: 'flex-end', fontSize: '0.85rem' }}>Proceed with checkout for the headphones.</div>
+                    <div className="chat-bubble-agent" style={{ padding: '12px', alignSelf: 'flex-start', fontSize: '0.85rem' }}>The merchant price changed before payment. I haven't charged you. The current price is ₹3,799. Would you like to continue?</div>
                     <div style={{ background: '#000', border: '1px solid #333', padding: '12px', textAlign: 'center', marginTop: '8px' }}>
-                      <div style={{ textDecoration: 'line-through', color: '#888', fontSize: '0.8rem' }}>₹3499</div>
-                      <div style={{ color: 'var(--neon-green)', fontWeight: 'bold', fontSize: '1.4rem' }}>₹3149</div>
-                      <button className="btn btn-primary" style={{ width: '100%', padding: '8px', fontSize: '0.8rem', marginTop: '10px' }}>CHECKOUT NOW</button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeMockup === 'roi' && (
-                <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div style={{ background: '#1a1a1a', padding: '20px', border: '1px solid #333' }}>
-                    <div style={{ color: '#888', fontSize: '0.7rem', fontWeight: 800 }}>TOTAL AI REVENUE</div>
-                    <div style={{ color: 'var(--neon-cyan)', fontSize: '2.5rem', fontWeight: 'bold', margin: '10px 0' }}>₹1.42L</div>
-                    <div style={{ color: 'var(--neon-green)', fontSize: '0.8rem' }}>↑ 24% this month</div>
-                  </div>
-                  <div style={{ background: '#1a1a1a', padding: '20px', border: '1px solid #333' }}>
-                    <div style={{ color: '#888', fontSize: '0.7rem', fontWeight: 800 }}>AUTOMATED UPSELL RATE</div>
-                    <div style={{ color: 'var(--neon-yellow)', fontSize: '2.5rem', fontWeight: 'bold', margin: '10px 0' }}>18.4%</div>
-                    <div style={{ color: '#888', fontSize: '0.8rem' }}>Avg +₹450 per cart</div>
-                  </div>
-                  <div style={{ gridColumn: '1 / -1', background: '#1a1a1a', padding: '20px', border: '1px solid #333' }}>
-                    <div style={{ color: '#888', fontSize: '0.7rem', fontWeight: 800, marginBottom: '20px' }}>POLICY REJECTIONS (MARGIN PROTECTION)</div>
-                    <div style={{ display: 'flex', gap: '4px', height: '60px', alignItems: 'flex-end' }}>
-                      {[4, 7, 2, 8, 12, 5, 3, 9, 14, 6].map((h, i) => (
-                        <div key={i} style={{ flex: 1, background: h > 10 ? 'var(--neon-pink)' : 'var(--neon-cyan)', height: `${h * 10}%` }} />
-                      ))}
+                      <div style={{ color: 'var(--neon-pink)', fontWeight: 'bold', fontSize: '1.4rem' }}>TRANSACTION BLOCKED</div>
+                      <div style={{ color: '#888', fontSize: '0.8rem', marginTop: '4px' }}>Safe Autonomy in Action</div>
                     </div>
                   </div>
                 </div>

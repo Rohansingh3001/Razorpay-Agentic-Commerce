@@ -271,7 +271,20 @@ export default function AgentChatInterface({ addLog }: ChatProps) {
     }
 
     if (call.name === 'request_purchase') {
-      const { policy_decision, proposed_total, purchase_request_id } = call.result;
+      const { policy_decision, proposed_total, purchase_request_id, message } = call.result;
+      
+      if (policy_decision === 'BLOCKED') {
+        return (
+          <div key={idx} className="brutal-panel" style={{ marginTop: '16px', padding: '16px', width: '100%', maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '12px', border: '2px solid var(--neon-pink)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', background: 'var(--neon-pink)', color: 'var(--white)', padding: '4px 8px', display: 'inline-block', alignSelf: 'flex-start', border: 'var(--border-medium)' }}>
+              POLICY: BLOCKED
+            </div>
+            <div style={{ fontWeight: 800, color: 'var(--neon-pink)' }}>Transaction Intercepted</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{message || 'The Policy Engine blocked this transaction.'}</div>
+          </div>
+        );
+      }
+
       if (!purchase_request_id) return null;
       
       const liveStatus = requestStatus[purchase_request_id];
@@ -284,7 +297,7 @@ export default function AgentChatInterface({ addLog }: ChatProps) {
       
       return (
         <div key={idx} className="brutal-panel" style={{ marginTop: '16px', padding: '16px', width: '100%', maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', background: badgeColor, padding: '4px 8px', display: 'inline-block', alignSelf: 'flex-start', border: 'var(--border-medium)' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', background: badgeColor, color: badgeColor === 'var(--neon-yellow)' ? 'var(--black)' : 'var(--white)', padding: '4px 8px', display: 'inline-block', alignSelf: 'flex-start', border: 'var(--border-medium)' }}>
             POLICY: {isApproved ? 'APPROVED' : isRejected ? 'REJECTED' : policy_decision}
           </div>
           <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.9rem' }}>
